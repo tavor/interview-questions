@@ -5,48 +5,35 @@ public class LongestSubstring {
 	public static void main(String[] args) {
 		LongestSubstring program = new LongestSubstring();
 		System.out.println(program.longestSubstring("aabcb"));
+		System.out.println(program.longestSubstring("abcabc"));
+		System.out.println(program.longestSubstring("abcabcbb"));
+		System.out.println(program.longestSubstring("bbbbb"));
+		System.out.println(program.longestSubstring("pwwkew"));
 	}
 	
-	public String longestSubstring(String str) {
+	public Integer longestSubstring(String str) {
+		if ("".equals(str)) {
+			return 0;
+		}
 		Set<Character> uniqueCharacters = new HashSet<Character>();
 		
-		int longestSubstringIndex = 0, candidateSubstringIndex = 0,
-		    longestSubstringLength = 0, candidateSubstringLength = 0,
-		    index = 0;
-		boolean counting = false;
+		int candidateSubstringIndex = 0, longestSubstringLength = 0, 
+		    candidateSubstringLength = 0, index = 0;
 		while (index < str.length()) {
-			if (index + 1 != str.length()) {
-				char nextCharacter = str.charAt(index + 1);
+			if (!uniqueCharacters.contains(str.charAt(index))) {
+				uniqueCharacters.add(str.charAt(index));
 
-				if (str.charAt(index) != nextCharacter &&
-				    uniqueCharacters.contains(nextCharacter)) {
-					uniqueCharacters.add(nextCharacter);
-
-					if (!counting) {
-						candidateSubstringIndex = index;
-						candidateSubstringLength = 1;
-					}
-
-					counting = true;
-
-					candidateSubstringLength++;
-					if (longestSubstringLength < candidateSubstringLength) {
-						longestSubstringLength = candidateSubstringLength;
-						longestSubstringIndex = candidateSubstringIndex;
-					}
-				} else {
-					counting = false;
-					uniqueCharacters.clear();
-				}
-			} else if (index == str.length() && counting) {
 				candidateSubstringLength++;
 				if (longestSubstringLength < candidateSubstringLength) {
 					longestSubstringLength = candidateSubstringLength;
-					longestSubstringIndex = candidateSubstringIndex;
 				}
-			}
+			} else {
+				uniqueCharacters.clear(); uniqueCharacters.add(str.charAt(index));
+				candidateSubstringIndex = index;
+				candidateSubstringLength = 1;
+			}	
 			index++;
 		}
-		return str.substring(longestSubstringIndex, longestSubstringLength + 1);
+		return longestSubstringLength;
 	}
 }
