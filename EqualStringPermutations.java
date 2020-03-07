@@ -20,6 +20,9 @@ public class EqualStringPermutations {
 		} else if ((str1 == null && str2 == null) ||
 			   ("".equals(str1) && "".equals(str2))) {
 			return true;
+		} else if (("".equals(str1) && str2 == null) ||
+			   ("".equals(str2) && str1 == null)) {
+			return false;
 		}
 
 		if (str1.length() != str2.length()) {
@@ -38,11 +41,12 @@ public class EqualStringPermutations {
 			return false;
 		}
 
-		Character[] str1Characters = (Character[]) str1Counts.keySet().toArray();
+		Object[] str1Characters = str1Counts.keySet().toArray();
 		for (int i = 0; i < str1Characters.length; i++) {
-			if (!str2Counts.containsKey(str1Characters[i])) {
+			Character c = (Character) str1Characters[i];
+			if (!str2Counts.containsKey(c)) {
 				return false;
-			} else if (str2Counts.get(str1Characters[i]) != str1Counts.get(str1Characters[i])) {
+			} else if (str2Counts.get(c) != str1Counts.get(c)) {
 				return false;
 			}
 		}
