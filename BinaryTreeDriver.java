@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 class Node {
 	Integer value;
 	Node lChild;
@@ -116,7 +118,7 @@ class BinaryTree {
 		depthFirstInOrderTraversal(root);	
 	}
 
-	public void depthFirstInOrderTraversal(Node n) {
+	private void depthFirstInOrderTraversal(Node n) {
 		if (n.getLeft() != null) {
 			depthFirstInOrderTraversal(n.getLeft());
 		}
@@ -126,6 +128,38 @@ class BinaryTree {
 		if (n.getRight() != null) {
 			depthFirstInOrderTraversal(n.getRight());
 		}
+	}
+
+	public void depthFirstPreOrderTraversal() {
+		depthFirstPreOrderTraversal(root);	
+	}	
+	
+	private void depthFirstPreOrderTraversal(Node n) {
+		System.out.println(n.getValue());
+
+		if (n.getLeft() != null) {
+			depthFirstPreOrderTraversal(n.getLeft());
+		}
+
+		if (n.getRight() != null) {
+			depthFirstPreOrderTraversal(n.getRight());
+		}		
+	}
+
+	public void breadthFirstSearch() {
+		LinkedList<Node> stack = new LinkedList<Node>();
+
+		stack.add(root);
+		while (stack.peek() != null) {
+			Node n = stack.remove();
+			System.out.println(n.getValue());
+			if (n.getLeft() != null) {
+				stack.add(n.getLeft());
+			} 
+			if (n.getRight() != null) {
+				stack.add(n.getRight());
+			}			
+		}	
 	}	
 }
 
@@ -203,8 +237,15 @@ public class BinaryTreeDriver {
 
 		assert -1 == tree.get(-1);
 		assert null == tree.get(10);
-
+		
+		System.out.println("Depth-first in order traversal");
 		tree.depthFirstInOrderTraversal();
+
+		System.out.println("Depth-first pre order traversal");
+		tree.depthFirstPreOrderTraversal();
+
+		System.out.println("Bread-first search");
+		tree.breadthFirstSearch();
 	}	
 }
 
