@@ -111,6 +111,22 @@ class BinaryTree {
 		}
 		return null;
 	}
+
+	public void depthFirstInOrderTraversal() {
+		depthFirstInOrderTraversal(root);	
+	}
+
+	public void depthFirstInOrderTraversal(Node n) {
+		if (n.getLeft() != null) {
+			depthFirstInOrderTraversal(n.getLeft());
+		}
+	
+		System.out.println(n.getValue());
+
+		if (n.getRight() != null) {
+			depthFirstInOrderTraversal(n.getRight());
+		}
+	}	
 }
 
 class BinaryTreePrinter {
@@ -187,6 +203,8 @@ public class BinaryTreeDriver {
 
 		assert -1 == tree.get(-1);
 		assert null == tree.get(10);
+
+		tree.depthFirstInOrderTraversal();
 	}	
 }
 
