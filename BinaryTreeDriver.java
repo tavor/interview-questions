@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 import java.util.Stack;
+import java.util.Arrays;
 
 class Node {
 	Integer value;
@@ -43,10 +44,22 @@ class Node {
 	public void setValue(Integer i) {
 		this.value = i;
 	}
+
+	public void setLeft(Node n) {
+		this.lChild = n;
+	}
+
+	public void setRight(Node n) {
+		this.rChild = n;
+	}
 }
 
 class BinaryTree {
 	private Node root;	
+	
+	public BinaryTree() {
+		this.root = null;
+	}
 
 	public Node getNode() {
 		return this.root;
@@ -178,6 +191,35 @@ class BinaryTree {
 			}
 		}
 	}
+
+	public BinaryTree(LinkedList<Integer> lst) {
+		LinkedList<Node> queue = new LinkedList<Node>();
+		
+		if (lst.peek() == null) {
+			this.root = null;
+		}
+
+		this.root = new Node(lst.poll());
+		queue.add(root);
+
+		while (queue.peek() != null) {
+			Node parent = queue.poll();
+		
+			Node leftChild = null, rightChild = null;
+			if (lst.peek() != null) {
+				leftChild = new Node(lst.poll());
+				queue.add(leftChild);
+			}
+
+			if (lst.peek() != null) {
+				rightChild = new Node(lst.poll());
+				queue.add(rightChild);
+			}
+
+			parent.setLeft(leftChild);
+			parent.setRight(rightChild);
+		}
+	}
 }
 
 class BinaryTreePrinter {
@@ -264,6 +306,14 @@ public class BinaryTreeDriver {
 
 		System.out.println("Bread-first search");
 		tree.breadthFirstSearch();
+
+		System.out.println("Construct binary tree with linkedlist");
+		LinkedList<Integer> input = new LinkedList<Integer>(
+			Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+		);
+		BinaryTree treeFromLinkedList = new BinaryTree(input);
+		BinaryTreePrinter linkedListTreePrinter = new BinaryTreePrinter(treeFromLinkedList.getNode());
+		linkedListTreePrinter.print();
 	}	
 }
 
