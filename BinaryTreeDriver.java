@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.Stack;
 
 class Node {
 	Integer value;
@@ -147,20 +148,36 @@ class BinaryTree {
 	}
 
 	public void breadthFirstSearch() {
-		LinkedList<Node> stack = new LinkedList<Node>();
+		LinkedList<Node> queue = new LinkedList<Node>();
 
-		stack.add(root);
-		while (stack.peek() != null) {
-			Node n = stack.remove();
+		queue.add(root);
+		while (queue.peek() != null) {
+			Node n = queue.remove();
 			System.out.println(n.getValue());
 			if (n.getLeft() != null) {
-				stack.add(n.getLeft());
+				queue.add(n.getLeft());
 			} 
 			if (n.getRight() != null) {
-				stack.add(n.getRight());
-			}			
-		}	
-	}	
+				queue.add(n.getRight());
+			}
+		}
+	}
+	
+	public void depthFirstSearch() {
+		Stack<Node> stack = new Stack<Node>();
+
+		stack.push(root);
+		while (stack.peek() != null) {
+			Node n = stack.pop();
+			System.out.println(n.getValue());
+			if (n.getLeft() != null) {
+				stack.push(n.getLeft());
+			}
+			if (n.getRight() != null) {
+				stack.push(n.getRight());
+			}
+		}
+	}
 }
 
 class BinaryTreePrinter {
@@ -230,6 +247,7 @@ public class BinaryTreeDriver {
 		tree.add(2);
 		tree.add(-1);
 		tree.add(-2);
+		tree.add(11);
 
 		BinaryTreePrinter printer = new BinaryTreePrinter(tree.getNode());
 			
