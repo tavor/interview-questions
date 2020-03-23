@@ -191,6 +191,52 @@ class BinaryTree {
 			}
 		}
 	}
+		
+	public Integer maxDepth() {
+		if (root == null) {
+			return 0;
+		}
+
+		Integer leftSubtreeDepth = null, rightSubtreeDepth = null;
+		if (root.getLeft() != null) {
+			leftSubtreeDepth = 1 + getDepth(root.getLeft());
+		}
+
+		if (root.getRight() != null) {
+			rightSubtreeDepth = 1 + getDepth(root.getRight());
+		}
+
+		if (leftSubtreeDepth != null && rightSubtreeDepth != null) {
+			return leftSubtreeDepth > rightSubtreeDepth ?
+				leftSubtreeDepth : rightSubtreeDepth;
+		} else if (leftSubtreeDepth != null) { 
+			return leftSubtreeDepth;
+		} else if (rightSubtreeDepth != null) {
+			return rightSubtreeDepth;
+		}
+		return 1;
+	}
+
+	private Integer getDepth(Node n) {	
+		Integer leftSubtreeDepth = null, rightSubtreeDepth = null;
+		if (n.getLeft() != null) {
+			leftSubtreeDepth = 1 + getDepth(n.getLeft());
+		}
+
+		if (n.getRight() != null) {
+			rightSubtreeDepth = 1 + getDepth(n.getRight());
+		}
+		
+		if (leftSubtreeDepth != null && rightSubtreeDepth != null) {
+			return leftSubtreeDepth > rightSubtreeDepth ?
+				leftSubtreeDepth : rightSubtreeDepth;
+		} else if (leftSubtreeDepth != null) { 
+			return leftSubtreeDepth;
+		} else if (rightSubtreeDepth != null) {
+			return rightSubtreeDepth;
+		}
+		return 1;		
+	}	
 
 	public BinaryTree(LinkedList<Integer> lst) {
 		LinkedList<Node> queue = new LinkedList<Node>();
@@ -314,6 +360,7 @@ public class BinaryTreeDriver {
 		BinaryTree treeFromLinkedList = new BinaryTree(input);
 		BinaryTreePrinter linkedListTreePrinter = new BinaryTreePrinter(treeFromLinkedList.getNode());
 		linkedListTreePrinter.print();
+		assert 4 == treeFromLinkedList.maxDepth();
 	}	
 }
 
