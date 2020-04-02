@@ -268,6 +268,41 @@ class BinaryTree {
 		return levels;
 	}
 
+	public boolean isBinarySearchTree() {
+		if (this.root == null) {
+			return true;
+		}
+
+		boolean leftOk = true;
+		if (this.root.getLeft() != null){
+			leftOk = this.root.getLeft().getValue() < this.root.getValue() &&
+				isBinarySearchTree(this.root.getLeft());
+		}
+
+		boolean rightOk = true;
+		if (this.root.getRight() != null) {
+			rightOk = this.root.getRight().getValue() > this.root.getValue() &&
+				isBinarySearchTree(this.root.getRight()); 
+		} 
+
+		return leftOk && rightOk;
+	}
+
+	private boolean isBinarySearchTree(Node n) {
+		boolean leftOk = true, rightOk = true;
+
+		if (n.getLeft() != null) {
+			leftOk = n.getLeft().getValue() < n.getValue() &&
+				isBinarySearchTree(n.getLeft());
+		}
+
+		if (n.getRight() != null) {
+			rightOk = n.getRight().getValue() > n.getValue() &&
+				isBinarySearchTree(n.getRight());
+		}
+
+		return leftOk && rightOk;
+	}
 	public BinaryTree(LinkedList<Integer> lst) {
 		LinkedList<Node> queue = new LinkedList<Node>();
 		
@@ -407,6 +442,16 @@ public class BinaryTreeDriver {
 
 		System.out.println("8, 9, 10 at level 3");
 		assert levelListEquals(levelLists.get(3), Arrays.asList(8, 9, 10));
+
+		System.out.println("Check binary search tree");
+		LinkedList<Integer> binarySearchInput = new LinkedList<Integer>(
+			Arrays.asList(5, 3, 7, 2, 4, 6, 8, 1)
+		);
+		BinaryTree binarySearchTree = new BinaryTree(binarySearchInput);
+		BinaryTreePrinter binarySearchTreePrinter = new BinaryTreePrinter(binarySearchTree.getNode());
+		binarySearchTreePrinter.print();
+
+		assert binarySearchTree.isBinarySearchTree();	
 	}
 
 	private static boolean levelListEquals(List<Node> level, List<Integer> vals) {
