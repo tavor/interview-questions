@@ -268,6 +268,88 @@ class BinaryTree {
 		return levels;
 	}
 
+	public Node firstCommonAncestor(Integer p, Integer q) {
+		if (this.root == null) {
+			return null;
+		}
+
+		if (this.root.getValue() == p &&
+		    (contains(q, this.root.getLeft()) ||
+		     contains(q, this.root.getRight()))) {
+			return this.root;
+		}
+
+		if (this.root.getValue() == q &&
+		    (contains(q, this.root.getLeft()) ||
+		     contains(q, this.root.getRight()))) {
+			return this.root;
+		}
+
+		Node left = firstCommonAncestor(p, q, this.root.getLeft());
+		if (left != null) {
+			return left;
+		}
+
+		Node right = firstCommonAncestor(p, q, this.root.getRight());
+		if (right != null) {
+			return right;
+		}
+
+		if ((contains(p, this.root.getLeft()) || contains(p, this.root.getRight())) &&
+		    (contains(q, this.root.getRight()) || contains(q, this.root.getLeft()))) {
+			return this.root;
+		}
+		
+		return null;
+	}
+
+	private Node firstCommonAncestor(Integer p, Integer q, Node n) {
+		if (n == null) {
+			return null;
+		}		
+
+		if (n.getValue() == p &&
+		    (contains(q, n.getLeft()) ||
+		     contains(q, n.getRight()))) {
+			return n;
+		}
+
+		if (n.getValue() == q &&
+		    (contains(p, n.getLeft()) ||
+		     contains(p, n.getRight()))) {
+			return n;
+		}
+
+		Node left = firstCommonAncestor(p, q, n.getLeft());
+		if (left != null) {
+			return left;
+		}
+
+		Node right = firstCommonAncestor(p, q, n.getRight());
+		if (right != null) {
+			return right;
+		}
+
+		if ((contains(p, n.getLeft()) || contains(p, n.getRight())) &&
+		    (contains(q, n.getRight()) || contains(q, n.getLeft()))) {
+			return n;
+		}
+
+		return null;
+	}
+
+	private boolean contains(Integer v, Node n) {
+		if (n == null) {
+			return false;
+		}
+
+		if (n.getValue() == v) {
+			return true;
+		}
+
+		return contains(v, n.getLeft()) || contains(v, n.getRight());
+	}
+
 	public boolean isBinarySearchTree() {
 		if (this.root == null) {
 			return true;
@@ -451,7 +533,16 @@ public class BinaryTreeDriver {
 		BinaryTreePrinter binarySearchTreePrinter = new BinaryTreePrinter(binarySearchTree.getNode());
 		binarySearchTreePrinter.print();
 
-		assert binarySearchTree.isBinarySearchTree();	
+		assert binarySearchTree.isBinarySearchTree();
+		
+		System.out.println("First common ancestor of 2 and 4 is 3");
+		assert 3 == binarySearchTree.firstCommonAncestor(2, 4).getValue();
+
+		System.out.println("First common ancestor of 4 and 6 is 5");
+		assert 5 == binarySearchTree.firstCommonAncestor(4, 6).getValue();
+
+		System.out.println("First common ancestor of 2 and 7 is 5");
+		assert 5 == binarySearchTree.firstCommonAncestor(2, 7).getValue();
 	}
 
 	private static boolean levelListEquals(List<Node> level, List<Integer> vals) {
