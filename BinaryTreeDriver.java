@@ -1,6 +1,9 @@
 import java.util.LinkedList;
 import java.util.Stack;
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 class Node {
 	Integer value;
@@ -51,7 +54,7 @@ class Node {
 
 	public void setRight(Node n) {
 		this.rChild = n;
-	}
+	}	
 }
 
 class BinaryTree {
@@ -236,7 +239,34 @@ class BinaryTree {
 			return rightSubtreeDepth;
 		}
 		return 1;		
-	}	
+	}
+
+	public List<List<Node>> getLevelLists() {
+		List<List<Node>> levels = new ArrayList<List<Node>>();
+		ArrayList<Node> currentLevel = null;
+		
+		LinkedList<Node> queue = new LinkedList<Node>();
+		queue.add(this.root);
+
+		int count = 0, product = 1;
+		while (queue.peek() != null) {
+			Node n = queue.poll();
+			if ((count + 1) % product == 0) {
+				currentLevel = new ArrayList<Node>();
+				levels.add(currentLevel);
+				product *= 2;
+			}
+			
+			if (n != null) {
+				currentLevel.add(n);
+				queue.add(n.getLeft());
+				queue.add(n.getRight());
+			}
+			count++;
+		}
+
+		return levels;
+	}
 
 	public BinaryTree(LinkedList<Integer> lst) {
 		LinkedList<Node> queue = new LinkedList<Node>();
@@ -361,6 +391,35 @@ public class BinaryTreeDriver {
 		BinaryTreePrinter linkedListTreePrinter = new BinaryTreePrinter(treeFromLinkedList.getNode());
 		linkedListTreePrinter.print();
 		assert 4 == treeFromLinkedList.maxDepth();
-	}	
+
+		List<List<Node>> levelLists = treeFromLinkedList.getLevelLists();
+		System.out.println("Binary tree constructed linkedlist has 4 levels");
+		assert 4 == levelLists.size();
+
+		System.out.println("1 at level 0");	
+		assert levelListEquals(levelLists.get(0), Arrays.asList(1));
+
+		System.out.println("2, 3, at level 1");
+		assert levelListEquals(levelLists.get(1), Arrays.asList(2, 3)); 
+
+		System.out.println("4, 5, 6, 7 at level 2");
+		assert levelListEquals(levelLists.get(2), Arrays.asList(4, 5, 6, 7));
+
+		System.out.println("8, 9, 10 at level 3");
+		assert levelListEquals(levelLists.get(3), Arrays.asList(8, 9, 10));
+	}
+
+	private static boolean levelListEquals(List<Node> level, List<Integer> vals) {
+		if (level.size () != vals.size()) {
+			return false;
+		}
+
+		for (int i = 0, j = 0; i < level.size() && j < vals.size(); i++, j++) {
+			if (level.get(i).getValue() != vals.get(j)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
 
