@@ -385,6 +385,45 @@ class BinaryTree {
 
 		return leftOk && rightOk;
 	}
+
+	public boolean isSubtree(Node root) {
+		if (this.root == null ^ root == null) {
+			return false;
+		} else if (this.root == null && root == null) {
+			return true;
+		}
+
+		if (this.root.getValue() == root.getValue() &&
+		    (root.getLeft() == null || (
+		    	(root.getLeft() != null && isSubtree(this.root.getLeft(), root.getLeft())))) &&
+		    (root.getRight() == null || (
+			(root.getRight() != null && isSubtree(this.root.getRight(), root.getRight()))))) {
+			return true;	
+		}
+
+		return isSubtree(this.root.getLeft(), root) || 
+		       isSubtree(this.root.getRight(), root);
+	}
+
+	private boolean isSubtree(Node n, Node r) {
+		if (n == null ^ r == null) {
+			return false;
+		} else if (n == null && r == null) {
+			return true;
+		}
+
+		if (n.getValue() == r.getValue() &&
+		    (r.getLeft() == null || 
+		     (r.getLeft() != null && isSubtree(n.getLeft(), r.getLeft()))) &&
+		    (r.getLeft() == null ||
+		     (r.getLeft() != null && isSubtree(n.getLeft(), r.getLeft())))) {
+			return true;
+		}
+
+		return isSubtree(n.getLeft(), r) || 
+		       isSubtree(n.getRight(), r);
+	}
+
 	public BinaryTree(LinkedList<Integer> lst) {
 		LinkedList<Node> queue = new LinkedList<Node>();
 		
@@ -543,6 +582,19 @@ public class BinaryTreeDriver {
 
 		System.out.println("First common ancestor of 2 and 7 is 5");
 		assert 5 == binarySearchTree.firstCommonAncestor(2, 7).getValue();
+
+		System.out.println("Binary search subtree");
+		LinkedList<Integer> binarySearchSubtreeInput = new LinkedList<Integer>(
+			Arrays.asList(7, 6, 8)
+		);
+		LinkedList<Integer> binarySearchSubtreeInput2 = new LinkedList<Integer>(
+			Arrays.asList(3, 2)
+		);
+		BinaryTree binarySearchSubtree = new BinaryTree(binarySearchSubtreeInput);
+		BinaryTree binarySearchSubtree2 = new BinaryTree(binarySearchSubtreeInput2);
+
+		assert binarySearchTree.isSubtree(binarySearchSubtree.getNode());
+		assert binarySearchTree.isSubtree(binarySearchSubtree2.getNode());
 	}
 
 	private static boolean levelListEquals(List<Node> level, List<Integer> vals) {
