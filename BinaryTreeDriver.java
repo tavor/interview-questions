@@ -425,17 +425,17 @@ class BinaryTree {
 	}
 
 	class PathResult {
-		List<String> path;
+		StringBuilder path;
 		int sum;
 
 		PathResult(Node n) {
-			this.path = new ArrayList<String>();
-			this.path.add(n.getValue().toString());
+			this.path = new StringBuilder();
+			this.path.append(n.getValue().toString());
 			this.sum += n.getValue();
 		}
 		
 		PathResult() {
-			this.path = new ArrayList<String>();
+			this.path = new StringBuilder();
 			this.sum = 0;
 		}
 	}
@@ -447,7 +447,8 @@ class BinaryTree {
 
 		List<String> paths = new ArrayList<String>();
 		List<PathResult> candidatePaths = new ArrayList<PathResult>();
-		
+		List<PathResult> candidatePathsCopy = new ArrayList<PathResult>();		
+
 		if (this.root.getValue() == sum) {
 			paths.add(this.root.getValue().toString());
 		}
@@ -455,39 +456,28 @@ class BinaryTree {
 		PathResult p = new PathResult(this.root);
 		candidatePaths.add(p);
 
+		PathResult p2 = new PathResult(this.root);
+		candidatePathsCopy.add(p2);
+
 		findPathsForSum(sum, this.root.getLeft(), candidatePaths, paths);
-		findPathsForSum(sum, this.root.getRight(), candidatePaths, paths);
+		findPathsForSum(sum, this.root.getRight(), candidatePathsCopy, paths);
 
 		return paths;
 	}
 
 	private void findPathsForSum(int sum, Node n, List<PathResult> candidatePaths, List<String> paths) {
-		if (n != null) {
-			System.out.println(n.getValue());
-			PathResult thisNodeResult = new PathResult(n);
-			candidatePaths.add(thisNodeResult);
-
+		if (n != null) {	
 			List<PathResult> candidatePathsCopy = new ArrayList<PathResult>();
 			for (PathResult r : candidatePaths) {
 				r.sum += n.getValue();
-				r.path.add(n.getValue().toString());
-				if (r.sum == sum) {
-					StringBuilder str = new StringBuilder();
-					for (int s = 0; s < r.path.size(); s++) {
-						if (s < r.path.size() - 1) {
-							str.append(r.path.get(s) + "->");
-						} else {
-							str.append(r.path.get(s));
-						}
-					}
-					paths.add(str.toString());
+				r.path.append("->" + n.getValue().toString());
+				if (r.sum == sum) {	
+					paths.add(r.path.toString());
 				}
 				
 				PathResult result = new PathResult();
 				result.sum = r.sum;	
-				for (String p : r.path) {
-					result.path.add(new String(p));
-				}
+				result.path = new StringBuilder(r.path);
 
 				candidatePathsCopy.add(result);
 				
@@ -682,6 +672,12 @@ public class BinaryTreeDriver {
 
 		System.out.println("Binary search tree paths that sum to 7");
 		System.out.println(binarySearchTree.findPathsForSum(7));
+
+		System.out.println("Binary search tree paths that sum to 6");
+		System.out.println(binarySearchTree.findPathsForSum(6));
+
+		System.out.println("Binary search tree paths that sum to 12");
+		System.out.println(binarySearchTree.findPathsForSum(12));
 	}
 
 	private static boolean levelListEquals(List<Node> level, List<Integer> vals) {
