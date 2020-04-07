@@ -38,26 +38,16 @@ public class InsertionSortMain {
 		
 		ArrayList<Integer> sortedArray = new ArrayList<Integer>();
 		sortedArray.add(list[0]);
-		
-		boolean inserted = false;
 			
 		for (int i = 1; i < list.length; i++) {
 			int sortedArrayIndex = 0;
-			do {	
-				if (list[i] <= sortedArray.get(sortedArrayIndex)) {
-					sortedArray.add(sortedArrayIndex, list[i]);
-					inserted = true;
-				} else if (sortedArrayIndex + 1 < sortedArray.size() &&
-					   list[i] > sortedArray.get(sortedArrayIndex) && 
-				           list[i] < sortedArray.get(sortedArrayIndex + 1)) {
-					sortedArray.add(sortedArrayIndex + 1, list[i]);
-					inserted = true;
-				} else if (sortedArrayIndex == sortedArray.size() - 1) {
-					sortedArray.add(list[i]); inserted = true;
-				}
+
+			while (sortedArrayIndex < sortedArray.size() &&
+			       list[i] < sortedArray.get(sortedArrayIndex)) {
 				sortedArrayIndex++;
-			} while (!inserted && sortedArrayIndex < sortedArray.size());
-			inserted = false;
+			}
+			
+			sortedArray.add(sortedArrayIndex, list[i]);
 		}
 		return sortedArray;
 	}	
