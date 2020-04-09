@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/* Based off and inspired by https://youtu.be/t0Cq6tVNRBA */
 class Heap {
 	ArrayList<Integer> heap;
 
