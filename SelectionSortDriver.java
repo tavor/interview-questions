@@ -10,17 +10,21 @@ public class SelectionSortDriver {
 	}
 
 	public void selectionSort(int[] a) {
-		for (int i = 1; i < a.length; i++) {
-			int j = 0;
-			while (j < i && a[i] > a[j]) {
-				j++;
+		for (int j = 0; j < a.length; j++) {
+			int min = Integer.MAX_VALUE, k = 0;
+			for (int i = j; i < a.length; i++) {
+				if (a[i] < min) {
+					min = a[i];
+					k = i;
+				}
 			}
-			
-			int temp = a[i], k = i;
-			while (k > j) {
-				a[k] = a[k - 1]; k--;
+		
+			int l = k;
+			while (l > j) {
+				a[l] = a[l - 1];
+				l--;
 			}
-			a[k] = temp;
+			a[j] = min;
 		}
 	}
 }
