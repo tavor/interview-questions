@@ -19,11 +19,21 @@ public class TrieDriver {
 	public static void main(String[] args) {
 		TrieDriver program = new TrieDriver();
 
-		Node n = program.createTrie(Arrays.asList("a","about"));
-		program.printTrie(n, 0);
+		//Node n = program.createTrie(Arrays.asList("a","about"));
+		//program.printTrie(n, 0);
+
+		Node n2 = program.createTrie(Arrays.asList("a","aloof","about"));
+		program.printTrie(n2, 0);
+
+		Node n3 = program.createTrie(Arrays.asList(""));
+		program.printTrie(n3, 0);
 	}
 
 	public void printTrie(Node root, int depth) {
+		if (root == null) {
+			return;
+		}
+		
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < depth; i++) {
 			builder.append("\t");
@@ -56,9 +66,9 @@ public class TrieDriver {
 			root.isWord = true;
 			return;
 		}
+
 	
 		Character ch = s.charAt(c);
-
 		if (root.c == ch) {
 			c++;	
 			if (c == s.length()) {
@@ -76,6 +86,22 @@ public class TrieDriver {
 			root.children.put(ch, n);
 			root = n;
 			c++;
+			if (c == s.length()) {
+				root.isWord = true;
+				return;
+			}
+			ch = s.charAt(c);
+			while (root.c == ch) {
+				Node m = new Node(ch);
+				root.children.put(ch, m);
+				root = m;
+				c++;
+				if (c == s.length()) {
+					root.isWord = true;
+					return;
+				}
+				ch = s.charAt(c);
+			}
 		}
 
 		
