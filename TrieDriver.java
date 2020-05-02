@@ -19,14 +19,17 @@ public class TrieDriver {
 	public static void main(String[] args) {
 		TrieDriver program = new TrieDriver();
 
-		//Node n = program.createTrie(Arrays.asList("a","about"));
-		//program.printTrie(n, 0);
+		Node n = program.createTrie(Arrays.asList("a","about"));
+		program.printTrie(n, 0);
 
 		Node n2 = program.createTrie(Arrays.asList("a","aloof","about"));
 		program.printTrie(n2, 0);
 
 		Node n3 = program.createTrie(Arrays.asList(""));
 		program.printTrie(n3, 0);
+
+		Node n4 = program.createTrie(Arrays.asList("aaa", "abc","ab"));
+		program.printTrie(n4, 0);
 	}
 
 	public void printTrie(Node root, int depth) {
@@ -50,61 +53,47 @@ public class TrieDriver {
 		Node root = null;
 		for (String s : dictionary) {
 			if (s != "") {
-				if (root == null) {
-					root = new Node(s.charAt(0));
-					insertIntoTrie(s, root, 1);
-				}
-				insertIntoTrie(s, root, 0);
+				root = insertIntoTrie(s, root);
 			}			
 		}
 
 		return root;
 	}
 
-	public void insertIntoTrie(String s, Node root, int c) {
+	public Node insertIntoTrie(String s, Node root) {
+		int c = 0;
+		
+		if (root == null) {
+			root = new Node(s.charAt(c));
+			c++;
+		} else if (root.c == s.charAt(c)) {
+			c++;
+		}
+
 		if (c == s.length()) {
-			root.isWord = true;
-			return;
-		}
+			return root;
+		}	
 
-	
-		Character ch = s.charAt(c);
-		if (root.c == ch) {
-			c++;	
-			if (c == s.length()) {
-				root.isWord = true;
-				return;
-			}
-			ch = s.charAt(c);
-		}
-		
-		if (root.children.containsKey(ch)) {
-			c++;
-			root = root.children.get(ch);
-		} else {
-			Node n = new Node(ch);
-			root.children.put(ch, n);
-			root = n;
-			c++;
-			if (c == s.length()) {
-				root.isWord = true;
-				return;
-			}
-			ch = s.charAt(c);
-			while (root.c == ch) {
-				Node m = new Node(ch);
-				root.children.put(ch, m);
-				root = m;
-				c++;
-				if (c == s.length()) {
-					root.isWord = true;
-					return;
-				}
-				ch = s.charAt(c);
-			}
-		}
-
-		
 		insertIntoTrie(s, root, c);
+		return root;
+	}
+
+	public void insertIntoTrie(String s, Node n, int c) {
+		Character ch = s.charAt(c);
+		if (n.children.containsKey(ch)) {
+			c++;
+			if (c == s.length()) {
+				return;
+			}
+			insertIntoTrie(s, n.children.get(ch), c);
+		} else {
+			Node m = new Node(ch);
+			n.children.put(ch, m);
+			c++;
+			if (c == s.length()) {
+				return;
+			}
+			insertIntoTrie(s, m, c);
+		}
 	}
 }
