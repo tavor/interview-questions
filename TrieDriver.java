@@ -30,6 +30,12 @@ public class TrieDriver {
 
 		Node n4 = program.createTrie(Arrays.asList("aaa", "abc","ab"));
 		program.printTrie(n4, 0);
+
+		assert program.wordInTrie(n4, "aaa");
+		assert program.wordInTrie(n4, "abc");
+		assert program.wordInTrie(n4, "ab");
+
+		assert program.wordInTrie(n2, "aloof");
 	}
 
 	public void printTrie(Node root, int depth) {
@@ -42,11 +48,41 @@ public class TrieDriver {
 			builder.append("\t");
 		}
 
-		System.out.println(builder.toString() + root.c);
+		System.out.println(builder.toString() + root.c + (root.isWord ? "*" : ""));
 
 		for (Map.Entry<Character, Node> e : root.children.entrySet()) {
 			printTrie(e.getValue(), depth + 1);	
 		}
+	}
+
+	private boolean wordInTrie(Node root, String s) {
+		if (root == null) {
+			return false;
+		}
+
+		int c = 0;
+
+		if (root.c == s.charAt(c)) {
+			c++;
+			if (c == s.length()) {
+				return root.isWord;
+			}
+			
+			return wordInTrie(root, s, 1);
+		}
+		return false;
+	}
+
+	private boolean wordInTrie(Node n, String s, int c) {
+		Character ch = s.charAt(c);
+		if (n.children.containsKey(ch)) {
+			if (c + 1 == s.length()) {
+				return n.children.get(ch).isWord;
+			}
+			c++;
+			return wordInTrie(n.children.get(ch), s, c);
+		}
+		return false;
 	}
 
 	private Node createTrie(List<String> dictionary) {
@@ -71,6 +107,7 @@ public class TrieDriver {
 		}
 
 		if (c == s.length()) {
+			root.isWord = true;
 			return root;
 		}	
 
@@ -83,6 +120,7 @@ public class TrieDriver {
 		if (n.children.containsKey(ch)) {
 			c++;
 			if (c == s.length()) {
+				n.children.get(ch).isWord = true;
 				return;
 			}
 			insertIntoTrie(s, n.children.get(ch), c);
@@ -91,6 +129,7 @@ public class TrieDriver {
 			n.children.put(ch, m);
 			c++;
 			if (c == s.length()) {
+				n.children.get(ch).isWord = true;
 				return;
 			}
 			insertIntoTrie(s, m, c);
