@@ -5,12 +5,10 @@ import java.util.Map;
 
 public class TrieDriver {
 	class Node {
-		Character c;
 		HashMap<Character, Node> children;
 		boolean isWord;
 
-		Node(Character c) {
-			this.c = c;
+		Node() {
 			this.children = new HashMap<Character, Node>();
 			this.isWord = false;
 		}
@@ -20,16 +18,19 @@ public class TrieDriver {
 		TrieDriver program = new TrieDriver();
 
 		Node n = program.createTrie(Arrays.asList("a","about"));
-		program.printTrie(n, 0);
+		program.printTrie(n, 0, '*');
 
 		Node n2 = program.createTrie(Arrays.asList("a","aloof","about"));
-		program.printTrie(n2, 0);
+		program.printTrie(n2, 0, '*');
 
 		Node n3 = program.createTrie(Arrays.asList(""));
-		program.printTrie(n3, 0);
+		program.printTrie(n3, 0, '*');
 
 		Node n4 = program.createTrie(Arrays.asList("aaa", "abc","ab"));
-		program.printTrie(n4, 0);
+		program.printTrie(n4, 0, '*');
+
+		Node n5 = program.createTrie(Arrays.asList("a", "b"));
+		program.printTrie(n5, 0, '*');
 
 		assert program.wordInTrie(n4, "aaa");
 		assert program.wordInTrie(n4, "abc");
@@ -38,7 +39,16 @@ public class TrieDriver {
 		assert program.wordInTrie(n2, "aloof");
 	}
 
-	public void printTrie(Node root, int depth) {
+	public String findWord(String p, Node root) {
+		// find character in p, while c < p.length()
+			// store character in StringBuilder
+			// go to the next character
+			// if we are at p's length, return word if nod
+		// if c == p.length(), return ""
+		return "";
+	}
+
+	public void printTrie(Node root, int depth, Character c) {
 		if (root == null) {
 			return;
 		}
@@ -48,10 +58,10 @@ public class TrieDriver {
 			builder.append("\t");
 		}
 
-		System.out.println(builder.toString() + root.c + (root.isWord ? "*" : ""));
+		System.out.println(builder.toString() + c + (root.isWord ? "*" : ""));
 
 		for (Map.Entry<Character, Node> e : root.children.entrySet()) {
-			printTrie(e.getValue(), depth + 1);	
+			printTrie(e.getValue(), depth + 1, e.getKey());	
 		}
 	}
 
@@ -59,18 +69,7 @@ public class TrieDriver {
 		if (root == null) {
 			return false;
 		}
-
-		int c = 0;
-
-		if (root.c == s.charAt(c)) {
-			c++;
-			if (c == s.length()) {
-				return root.isWord;
-			}
-			
-			return wordInTrie(root, s, 1);
-		}
-		return false;
+		return wordInTrie(root, s, 0);
 	}
 
 	private boolean wordInTrie(Node n, String s, int c) {
@@ -98,18 +97,20 @@ public class TrieDriver {
 
 	public Node insertIntoTrie(String s, Node root) {
 		int c = 0;
-		
+	
+		Character ch = s.charAt(c);	
 		if (root == null) {
-			root = new Node(s.charAt(c));
+			root = new Node();
+			Node m = new Node();
+			root.children.put(ch, m);
 			c++;
-		} else if (root.c == s.charAt(c)) {
-			c++;
-		}
-
-		if (c == s.length()) {
-			root.isWord = true;
+			if (c == s.length()) {
+				m.isWord = true;
+				return root;
+			}
+			insertIntoTrie(s, m, c);
 			return root;
-		}	
+		}
 
 		insertIntoTrie(s, root, c);
 		return root;
@@ -125,7 +126,7 @@ public class TrieDriver {
 			}
 			insertIntoTrie(s, n.children.get(ch), c);
 		} else {
-			Node m = new Node(ch);
+			Node m = new Node();
 			n.children.put(ch, m);
 			c++;
 			if (c == s.length()) {
