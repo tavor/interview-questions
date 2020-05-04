@@ -2,6 +2,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.ArrayList;
 
 public class TrieDriver {
 	class Node {
@@ -37,15 +38,58 @@ public class TrieDriver {
 		assert program.wordInTrie(n4, "ab");
 
 		assert program.wordInTrie(n2, "aloof");
+
+		List<String> words = program.findWords("a99999bbbbout", n);
+		for (String w : words) {
+			System.out.print(w + " ");
+		}
+		System.out.println();
 	}
 
-	public String findWord(String p, Node root) {
-		// find character in p, while c < p.length()
-			// store character in StringBuilder
-			// go to the next character
-			// if we are at p's length, return word if nod
-		// if c == p.length(), return ""
-		return "";
+	public List<String> findWords(String p, Node root) {
+		int c = 0;
+		List<String> result = new ArrayList<String>();		
+		StringBuilder builder = new StringBuilder();
+		Node n = null;
+
+		while (c < p.length()) {
+			if (root.children.containsKey(p.charAt(c))) {
+				n = root.children.get(p.charAt(c));
+				builder.append(p.charAt(c));
+				break;
+			}
+			c++;
+		}
+		
+		if (n == null) {
+			return result;
+		} else if (n.isWord) {
+			result.add(builder.toString());
+		}
+	
+		findWords(p, n, c, builder, result);
+
+		return result;
+	}
+
+	public void findWords(String p, Node n, int c, StringBuilder builder, List<String> result) {
+		Node m = null;
+		while (c < p.length()) {
+			if (n.children.containsKey(p.charAt(c))) {
+				m = n.children.get(p.charAt(c));
+				builder.append(p.charAt(c));
+				break;
+			}
+			c++;
+		}
+
+		if (m == null) {
+			return;
+		} else if (m.isWord) {
+			result.add(builder.toString());
+		}
+
+		findWords(p, m, c, builder, result);
 	}
 
 	public void printTrie(Node root, int depth, Character c) {
